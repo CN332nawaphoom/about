@@ -7,4 +7,4 @@ about,doc,pivotal,slide,report ..etc
 - Suwijak Tantamaroj 6410685256 username:6410685256
 - Nipitpon Kampolrat 6410685173 username:6410685173
 - Nawaphoom Nachai   6410615071 username:nawaphoom17
--
+- Suttha jongjaroen 6410615121 username: 6410615121
