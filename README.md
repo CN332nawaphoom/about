@@ -10,5 +10,5 @@ about,doc,pivotal,slide,report ..etc
  |     Suwijak Tantamaroj   |  6410615147  | 6410615147 |
  |   Nipitpon Kampolrat   |  6410685058  | 6410685058 |
  |     Nawaphoom Nachai     |  6410685116  | nawaphoom17 |
- |     ธSuttha jongjaroen     |  6410685157  | 6410615121 |
+ |     Suttha jongjaroen     |  6410685157  | 6410615121 |
  
