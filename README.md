@@ -1,6 +1,8 @@
 # about
 about,doc,pivotal,slide,report ..etc
 
+# figma (ux/ui design)
+https://www.figma.com/files/team/1335149229425819836
 
 ## members
 
