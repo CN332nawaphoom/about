@@ -1,6 +1,8 @@
 {
     "drawingEngine": "awt",
     "shapes":[
-        {"Rectangle": {"line_color": "green", "area_color":"blue"}}
+        {"type": "Rectangle", "line_color": "#1cac78", "area_color":"#1cac78", "x": 0, "y":0, "width": 30, "height":50},
+        {"type": "Rectangle", "line_color": "#ff0000", "area_color":"#ff0000", "x": 60, "y":80, "width": 30, "height":50},
+        {"type": "Rectangle", "line_color": "#1cac78", "area_color":"#1cac78", "x": 90, "y":200, "width": 30, "height":50},
     ]
 }

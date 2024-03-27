@@ -1,11 +1,9 @@
 package Drawing;
 
-import Shape.Shape;
+import Shape.MyShape;
 
 public interface Drawing {
-    public void draw(Shape s);
-
-    public void fill(Shape s);
+    public void paint(MyShape s, String line_color, String area_color);
 
     public void saveImage(String format_name, String file_path);
 }

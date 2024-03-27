@@ -4,31 +4,33 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
+import javax.swing.SwingUtilities;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import Drawing.Drawing;
 import Drawing.DrawingAWT;
-import Shape.Shape;
+import Shape.MyRectangle;
+import Shape.MyShape;
 import io.github.cdimascio.dotenv.Dotenv;
 
-
-public class DrawingFactory{
+public class DrawingFactory {
     private Drawing drawing;
-    private Shape[] shapes;
+    private MyShape[] shapes;
     private String conf_path;
 
-    DrawingFactory(String conf_path){
+    DrawingFactory(String conf_path) {
         this.conf_path = conf_path;
     }
 
     public void read_conf() throws FileNotFoundException{
-        String type = conf_path.split("\\.")[1];
+        String filetype = conf_path.split("\\.")[1];
         String drawingEngine;
-        Shape[] shapes;
+        MyShape[] shapes;
 
-        switch (type.toLowerCase()) {
+        switch (filetype.toLowerCase()) {
             case "json":
                 String jsonContent = read_to_string(conf_path);
                 JSONObject obj = new JSONObject(jsonContent);
@@ -38,20 +40,45 @@ public class DrawingFactory{
                 System.out.printf("drawingEngine: %s \n", drawingEngine);
 
                 if (drawingEngine.equalsIgnoreCase("awt")){
+                    System.out.printf("Created drawingEngine: %s \n", drawingEngine);
                     this.drawing = new DrawingAWT(); 
                 }
 
                 // shapes
                 JSONArray shapesArray = obj.getJSONArray("shapes");
-                // TODO shapes creation loop //
+                
+                for (int i = 0; i < shapesArray.length(); i++) {
+                    JSONObject shapeObject = shapesArray.getJSONObject(i);
+                
+                    // Extract shape properties
+                    String typeShape = shapeObject.getString("type");
+                    String lineColor = shapeObject.getString("line_color");
+                    String areaColor = shapeObject.getString("area_color");
 
+                    if (typeShape.equalsIgnoreCase("Rectangle")) {
+                        int x = shapeObject.getInt("x");
+                        int y = shapeObject.getInt("y");
+                        int width = shapeObject.getInt("width");
+                        int height = shapeObject.getInt("height");
+                        int[] position_data = {x,y,width,height};
+
+                        MyShape rect = new MyRectangle(lineColor, areaColor, position_data);
+                        SwingUtilities.invokeLater(() -> {
+                            // Call the paint method on the EDT
+                            drawing.paint(rect, lineColor, areaColor);
+                        });
+                        
+                    }
+
+                    // TODO other shape //
+                }
                 break;
             default:
-                throw new FileNotFoundException("Unsupported file type: " + type);
+                throw new FileNotFoundException("Unsupported file filetype: " + filetype);
         }
     }
 
-    private String read_to_string(String file_path) throws FileNotFoundException{
+    private String read_to_string(String file_path) throws FileNotFoundException {
         try (FileReader reader = new FileReader(file_path)) {
             StringBuilder sb = new StringBuilder();
             int ch;
@@ -66,11 +93,14 @@ public class DrawingFactory{
         }
     }
 
-    public void saveImage(String file_path){
-        // TODO saveImage
+    public void saveImage(String format_name, String file_path) {
+        SwingUtilities.invokeLater(() -> {
+            drawing.saveImage(format_name, file_path);
+        });
+        
     }
 
-    public void set_conf_path(String path){
+    public void set_conf_path(String path) {
         // TODO set_conf_path
     }
 }
