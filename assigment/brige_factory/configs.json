@@ -1,5 +1,6 @@
 {
-    "name": "Alice",
-    "age": 30,
-    "city": "New York"
+    "drawingEngine": "awt",
+    "shapes":[
+        {"Rectangle": {"line_color": "green", "area_color":"blue"}}
+    ]
 }
