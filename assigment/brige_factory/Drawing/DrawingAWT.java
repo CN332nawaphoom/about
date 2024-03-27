@@ -15,5 +15,11 @@ public class DrawingAWT implements Drawing{
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'fill'");
     }
+
+    @Override
+    public void saveImage(String formatName, String filePath) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'saveImage'");
+    }
     
 }
