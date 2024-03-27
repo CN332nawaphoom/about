@@ -7,5 +7,5 @@ public interface Drawing {
 
     public void fill(Shape s);
 
-    public void saveImage(String formatName, String filePath);
+    public void saveImage(String format_name, String file_path);
 }

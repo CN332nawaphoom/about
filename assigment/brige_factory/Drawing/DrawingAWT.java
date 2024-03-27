@@ -17,7 +17,7 @@ public class DrawingAWT implements Drawing{
     }
 
     @Override
-    public void saveImage(String formatName, String filePath) {
+    public void saveImage(String format_name, String file_path) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'saveImage'");
     }
