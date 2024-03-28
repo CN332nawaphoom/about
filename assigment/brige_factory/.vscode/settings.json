@@ -1,8 +1,8 @@
 {
     "java.project.referencedLibraries": [
         "lib/**/*.jar",
-        "json-20240303.jar",
-        "dotenv-java-3.0.0.jar"
+        "./libs/json-20240303.jar",
+        "./libs/dotenv-java-3.0.0.jar"
     ],
     "java.debug.settings.onBuildFailureProceed": true
 }
