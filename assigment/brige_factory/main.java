@@ -1,22 +1,32 @@
-import java.awt.Graphics2D;
-import java.awt.Color;
-import java.awt.BasicStroke;
-import java.awt.Graphics;
-import java.awt.geom.Line2D;
-
-import javax.swing.JPanel;
+import java.io.File;
 import java.io.FileNotFoundException;
 
-
-public class main extends JPanel {
-    ;
-    public static void main(String [] args){
-        try{
-        Factory a=new Factory("/Users/kunkerdthaisong/cn332/hw/about/assigment/brige_factory/configs.json","json");
-        System.out.println(a.readConfig("name"));
-        } catch (FileNotFoundException e ){
-            System.out.println("not found");
-        }
+public class main {
+    public static void main(String[] args) {
+        String dir = System.getProperty("user.dir");
+        String configName = "configs.json";
+        String filepath = dir + "\\configs\\" + configName;
         
+        // Create directory for images if it does not exist
+        String imgDirPath = dir + "\\imgs";
+        File imgDir = new File(imgDirPath);
+        if (!imgDir.exists()) {
+            boolean success = imgDir.mkdirs();
+            if (!success) {
+                System.out.println("Failed to create directory for images.");
+                return;
+            }
+        }
+
+        DrawingFactory f = new DrawingFactory(filepath);
+        try {
+            f.read_conf();
+
+            String imgFileName = "test2.png";
+            filepath = dir + "\\imgs\\" + imgFileName;
+            f.saveImage("png", filepath);
+        } catch (FileNotFoundException e) {
+            System.out.println(e);
+        }
     }
 }
