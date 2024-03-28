@@ -29,4 +29,16 @@ public class MyCircle extends MyShape {
         area_color = color;
     }
 
+    @Override
+    public int[] get_position_data() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'get_position_data'");
+    }
+
+    @Override
+    public void set_position_data(int[] position_data) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'set_position_data'");
+    }
+
 }
