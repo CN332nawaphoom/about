@@ -1,4 +1,5 @@
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -25,10 +26,10 @@ public class DrawingFactory {
         this.conf_path = conf_path;
     }
 
-    public void read_conf() throws FileNotFoundException{
+
+    public void read_conf() throws FileNotFoundException {
         String filetype = conf_path.split("\\.")[1];
         String drawingEngine;
-        MyShape[] shapes;
 
         switch (filetype.toLowerCase()) {
             case "json":
@@ -39,17 +40,18 @@ public class DrawingFactory {
                 drawingEngine = obj.getString("drawingEngine");
                 System.out.printf("drawingEngine: %s \n", drawingEngine);
 
-                if (drawingEngine.equalsIgnoreCase("awt")){
+                if (drawingEngine.equalsIgnoreCase("awt")) {
                     System.out.printf("Created drawingEngine: %s \n", drawingEngine);
                     this.drawing = new DrawingAWT(); 
                 }
 
                 // shapes
                 JSONArray shapesArray = obj.getJSONArray("shapes");
-                
+                shapes = new MyShape[shapesArray.length()];
+
                 for (int i = 0; i < shapesArray.length(); i++) {
                     JSONObject shapeObject = shapesArray.getJSONObject(i);
-                
+
                     // Extract shape properties
                     String typeShape = shapeObject.getString("type");
                     String lineColor = shapeObject.getString("line_color");
@@ -62,15 +64,11 @@ public class DrawingFactory {
                         int height = shapeObject.getInt("height");
                         int[] position_data = {x,y,width,height};
 
-                        MyShape rect = new MyRectangle(lineColor, areaColor, position_data);
-                        SwingUtilities.invokeLater(() -> {
-                            // Call the paint method on the EDT
-                            drawing.paint(rect, lineColor, areaColor);
-                        });
-                        
+                        MyRectangle rect = new MyRectangle(lineColor, areaColor, position_data);
+                        drawing.paintShape(rect, Color.decode(lineColor), Color.decode(areaColor), position_data);
                     }
 
-                    // TODO other shape //
+                    // TODO: Handle other shape types //
                 }
                 break;
             default:
