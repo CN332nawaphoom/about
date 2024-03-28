@@ -1,6 +1,3 @@
-
-import java.awt.Color;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,13 +10,14 @@ import org.json.JSONObject;
 
 import Drawing.Drawing;
 import Drawing.DrawingAWT;
+import Shape.MyCircle;
 import Shape.MyRectangle;
+import Shape.MyTriangle;
 import Shape.MyShape;
-import io.github.cdimascio.dotenv.Dotenv;
 
 public class DrawingFactory {
     private Drawing drawing;
-    private MyShape[] shapes;
+    //private MyShape[] shapes;
     private String conf_path;
 
     DrawingFactory(String conf_path) {
@@ -30,6 +28,8 @@ public class DrawingFactory {
     public void read_conf() throws FileNotFoundException {
         String filetype = conf_path.split("\\.")[1];
         String drawingEngine;
+        MyShape[] shapes;
+
 
         switch (filetype.toLowerCase()) {
             case "json":
@@ -65,10 +65,39 @@ public class DrawingFactory {
                         int[] position_data = {x,y,width,height};
 
                         MyRectangle rect = new MyRectangle(lineColor, areaColor, position_data);
-                        drawing.paintShape(rect, Color.decode(lineColor), Color.decode(areaColor), position_data);
+                        drawing.paintShape(rect);
+                    }
+                    else if (typeShape.equalsIgnoreCase("Circle")) {
+                        int x = shapeObject.getInt("x");
+                        int y = shapeObject.getInt("y");
+                        int radius = shapeObject.getInt("radius");
+                        int[] position_data = {x,y,radius};
+
+                        MyShape cir = new MyCircle(lineColor, areaColor, position_data);
+                        SwingUtilities.invokeLater(() -> {
+                            // Call the paint method on the EDT
+                            drawing.paintShape(cir);
+                        });
+                        
                     }
 
-                    // TODO: Handle other shape types //
+                    else if (typeShape.equalsIgnoreCase("Triangle")) {
+                        int[] coordinate_x = shapeObject.getJSONArray("x").toList().stream().mapToInt(o -> (int) o).toArray();
+                        int[] coordinate_y = shapeObject.getJSONArray("y").toList().stream().mapToInt(o -> (int) o).toArray();
+                        int[] position_data = new int[6];
+                        System.arraycopy(coordinate_x, 0, position_data, 0, coordinate_x.length);
+                        System.arraycopy(coordinate_y, 0, position_data, coordinate_x.length, coordinate_y.length);
+
+                        
+                        MyShape tri = new MyTriangle(lineColor, areaColor, coordinate_x,coordinate_y);
+                        SwingUtilities.invokeLater(() -> {
+                            // Call the paint method on the EDT
+                            drawing.paintShape(tri);
+                        });
+                        
+                    }
+
+                    
                 }
                 break;
             default:
@@ -99,6 +128,6 @@ public class DrawingFactory {
     }
 
     public void set_conf_path(String path) {
-        // TODO set_conf_path
+        
     }
 }

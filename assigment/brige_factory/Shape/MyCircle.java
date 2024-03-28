@@ -1,22 +1,27 @@
 package Shape;
+import java.awt.Color;
+
 
 public class MyCircle extends MyShape {
     private String line_color;
     private String area_color;
+    private int[] position_data; //[x,y,radius]
 
-    public MyCircle(String line_color, String area_color){
+    public MyCircle(String line_color, String area_color,int[] position_data){
         this.line_color = line_color;
         this.area_color = area_color;
+        this.position_data = position_data;
+    }
+
+
+    @Override
+    public Color get_line_color() {
+        return Color.decode(line_color);
     }
 
     @Override
-    public String get_line_color() {
-        return line_color;
-    }
-
-    @Override
-    public String get_area_color() {
-        return area_color;
+    public Color get_area_color() {
+        return Color.decode(area_color);
     }
 
     @Override
@@ -29,16 +34,18 @@ public class MyCircle extends MyShape {
         area_color = color;
     }
 
+
     @Override
     public int[] get_position_data() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'get_position_data'");
+        return position_data;
+        
     }
 
     @Override
     public void set_position_data(int[] position_data) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'set_position_data'");
+        this.position_data = position_data;
+        
     }
+
 
 }
