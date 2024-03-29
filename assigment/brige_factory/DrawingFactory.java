@@ -24,12 +24,57 @@ public class DrawingFactory {
         this.conf_path = conf_path;
     }
 
+    private MyShape createMyShape_fromJSONObject(JSONObject shapeObject,String typeShape,String lineColor, String areaColor){
+        MyShape myshape;
+
+        if (typeShape.equalsIgnoreCase("Rectangle")) {
+            int x = shapeObject.getInt("x");
+            int y = shapeObject.getInt("y");
+            int width = shapeObject.getInt("width");
+            int height = shapeObject.getInt("height");
+            int[] position_data = {x,y,width,height};
+
+            myshape = new MyRectangle(lineColor, areaColor, position_data);
+            // drawing.paintShape(rect);
+        }
+        else if (typeShape.equalsIgnoreCase("Circle")) {
+            int x = shapeObject.getInt("x");
+            int y = shapeObject.getInt("y");
+            int radius = shapeObject.getInt("radius");
+            int[] position_data = {x,y,radius};
+
+            myshape = new MyCircle(lineColor, areaColor, position_data);
+            // SwingUtilities.invokeLater(() -> {
+            //     // Call the paint method on the EDT
+            //     drawing.paintShape(cir);
+            // });
+            
+        }
+
+        else if (typeShape.equalsIgnoreCase("Triangle")) {
+            int[] coordinate_x = shapeObject.getJSONArray("x").toList().stream().mapToInt(o -> (int) o).toArray();
+            int[] coordinate_y = shapeObject.getJSONArray("y").toList().stream().mapToInt(o -> (int) o).toArray();
+            int[] position_data = new int[6];
+            System.arraycopy(coordinate_x, 0, position_data, 0, coordinate_x.length);
+            System.arraycopy(coordinate_y, 0, position_data, coordinate_x.length, coordinate_y.length);
+
+            
+            myshape = new MyTriangle(lineColor, areaColor, coordinate_x,coordinate_y);
+            // SwingUtilities.invokeLater(() -> {
+            //     // Call the paint method on the EDT
+            //     drawing.paintShape(myshape);
+            // });
+        }else{
+            // should have throw an exception
+            return null;
+        }
+        return myshape;
+    }
+    
 
     public void read_conf() throws FileNotFoundException {
         String filetype = conf_path.split("\\.")[1];
         String drawingEngine;
-        MyShape[] shapes;
-
 
         switch (filetype.toLowerCase()) {
             case "json":
@@ -44,10 +89,10 @@ public class DrawingFactory {
                     System.out.printf("Created drawingEngine: %s \n", drawingEngine);
                     this.drawing = new DrawingAWT(); 
                 }
+                //
 
                 // shapes
                 JSONArray shapesArray = obj.getJSONArray("shapes");
-                shapes = new MyShape[shapesArray.length()];
 
                 for (int i = 0; i < shapesArray.length(); i++) {
                     JSONObject shapeObject = shapesArray.getJSONObject(i);
@@ -57,49 +102,20 @@ public class DrawingFactory {
                     String lineColor = shapeObject.getString("line_color");
                     String areaColor = shapeObject.getString("area_color");
 
-                    if (typeShape.equalsIgnoreCase("Rectangle")) {
-                        int x = shapeObject.getInt("x");
-                        int y = shapeObject.getInt("y");
-                        int width = shapeObject.getInt("width");
-                        int height = shapeObject.getInt("height");
-                        int[] position_data = {x,y,width,height};
-
-                        MyRectangle rect = new MyRectangle(lineColor, areaColor, position_data);
-                        drawing.paintShape(rect);
-                    }
-                    else if (typeShape.equalsIgnoreCase("Circle")) {
-                        int x = shapeObject.getInt("x");
-                        int y = shapeObject.getInt("y");
-                        int radius = shapeObject.getInt("radius");
-                        int[] position_data = {x,y,radius};
-
-                        MyShape cir = new MyCircle(lineColor, areaColor, position_data);
-                        SwingUtilities.invokeLater(() -> {
-                            // Call the paint method on the EDT
-                            drawing.paintShape(cir);
-                        });
-                        
-                    }
-
-                    else if (typeShape.equalsIgnoreCase("Triangle")) {
-                        int[] coordinate_x = shapeObject.getJSONArray("x").toList().stream().mapToInt(o -> (int) o).toArray();
-                        int[] coordinate_y = shapeObject.getJSONArray("y").toList().stream().mapToInt(o -> (int) o).toArray();
-                        int[] position_data = new int[6];
-                        System.arraycopy(coordinate_x, 0, position_data, 0, coordinate_x.length);
-                        System.arraycopy(coordinate_y, 0, position_data, coordinate_x.length, coordinate_y.length);
-
-                        
-                        MyShape tri = new MyTriangle(lineColor, areaColor, coordinate_x,coordinate_y);
-                        SwingUtilities.invokeLater(() -> {
-                            // Call the paint method on the EDT
-                            drawing.paintShape(tri);
-                        });
-                        
-                    }
-
+                    MyShape shape = createMyShape_fromJSONObject(shapeObject,typeShape,lineColor,areaColor);
+                    SwingUtilities.invokeLater(() -> {
+                        drawing.paintShape(shape);
+                    });
                     
                 }
+
+                // end case "json"
                 break;
+
+
+            // TODO others filetype
+            //
+            
             default:
                 throw new FileNotFoundException("Unsupported file filetype: " + filetype);
         }
