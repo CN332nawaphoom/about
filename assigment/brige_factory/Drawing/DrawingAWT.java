@@ -1,6 +1,6 @@
 package Drawing;
 
-import java.awt.Color;
+// import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -21,22 +21,8 @@ import javax.swing.JPanel;
 import Shape.MyShape;
 
 public class DrawingAWT extends JPanel implements Drawing {
-    private List<ShapeInfo> shapes = new ArrayList<>();
+    private List<MyShape> shapes = new ArrayList<>();
     private JFrame frame;
-    
-    private static class ShapeInfo {
-        MyShape shape;
-        Color lineColor;
-        Color areaColor;
-        int[] position_data;
-
-        public ShapeInfo(MyShape shape) {
-            this.shape = shape;
-            this.lineColor = shape.get_line_color();
-            this.areaColor = shape.get_area_color();
-            this.position_data = shape.get_position_data();
-        }
-    }
 
     public DrawingAWT() {
         this.setPreferredSize(new Dimension(300, 300));
@@ -58,46 +44,47 @@ public class DrawingAWT extends JPanel implements Drawing {
         super.paintComponent(g);
         Graphics2D g2d = (Graphics2D) g;
 
-        for (ShapeInfo item : shapes) {
+        for (MyShape item : shapes) {
             Shape awtShape = createShape(item);
 
-            g2d.setColor(item.lineColor);
+            g2d.setColor(item.get_line_color());
             g2d.draw(awtShape); // Outline of the shape
 
-            g2d.setColor(item.areaColor);
+            g2d.setColor(item.get_area_color());
             g2d.fill(awtShape); // Fill the shape with color
         }
     }
 
 
-    private static Shape createShape(ShapeInfo s){
-        MyShape myShape = s.shape;
-        
-    
-        if (myShape != null) {
-            String shapeName = myShape.getClass().getSimpleName();
+    private static Shape createShape(MyShape myshape){
+        if (myshape != null) {
+            String shapeName = myshape.getClass().getSimpleName();
             if (shapeName.equalsIgnoreCase("MyRectangle")) {
-                int x = s.position_data[0];
-                int y = s.position_data[1];
-                int width = s.position_data[2];
-                int height = s.position_data[3];
+                int[] position_data = myshape.get_position_data();
+                int x = position_data[0];
+                int y = position_data[1];
+                int width = position_data[2];
+                int height = position_data[3];
+
                 return new Rectangle(x, y, width, height);
             }
 
             else if (shapeName.equalsIgnoreCase("MyCircle")){
-                int x = s.position_data[0];
-                int y = s.position_data[1];
-                int width = s.position_data[2]*2;
-                int height = s.position_data[2]*2;
+                int[] position_data = myshape.get_position_data();
+                int x = position_data[0];
+                int y = position_data[1];
+                int width = position_data[2]*2;
+                int height = position_data[2]*2;
                 return new Ellipse2D.Double(x,y,width,height);
             }
 
             else if (shapeName.equalsIgnoreCase("MyTriangle")){
+                int[] position_data = myshape.get_position_data();
                 int[] x  = new int[3];  
                 int[] y  = new int[3];  
                 for (int i=0;i<3;i++){
-                    x[i] = s.position_data[i];
-                    y[i] = s.position_data[i+3];
+                    x[i] = position_data[i];
+                    y[i] = position_data[i+3];
                 }
                 return new Polygon(x,y,x.length);
             }
@@ -111,7 +98,7 @@ public class DrawingAWT extends JPanel implements Drawing {
     
     public void paintShape(MyShape shape) {
         if (shape != null) {
-            shapes.add(new ShapeInfo(shape));
+            shapes.add(shape);
             repaint();
         } else {
             System.err.println("Cannot add null shape.");
