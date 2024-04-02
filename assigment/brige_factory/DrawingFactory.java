@@ -42,7 +42,6 @@ public class DrawingFactory {
             int[] position_data = {x,y,width,height};
 
             myshape = new MyRectangle(lineColor, areaColor, position_data);
-            // drawing.paintShape(rect);
         }
         else if (typeShape.equalsIgnoreCase("Circle")) {
             int x = shapeObject.getInt("x");
@@ -51,11 +50,6 @@ public class DrawingFactory {
             int[] position_data = {x,y,radius};
 
             myshape = new MyCircle(lineColor, areaColor, position_data);
-            // SwingUtilities.invokeLater(() -> {
-            //     // Call the paint method on the EDT
-            //     drawing.paintShape(cir);
-            // });
-            
         }
 
         else if (typeShape.equalsIgnoreCase("Triangle")) {
@@ -67,10 +61,6 @@ public class DrawingFactory {
 
             
             myshape = new MyTriangle(lineColor, areaColor, coordinate_x,coordinate_y);
-            // SwingUtilities.invokeLater(() -> {
-            //     // Call the paint method on the EDT
-            //     drawing.paintShape(myshape);
-            // });
         }else{
             // should have throw an exception
             return null;
@@ -79,7 +69,7 @@ public class DrawingFactory {
     }
 
     private MyShape createMyShape_from_ini(){
-        // TODO
+        // TODO later
         return null;
     }
     
@@ -125,25 +115,37 @@ public class DrawingFactory {
                 break;
 
 
-            // TODO others filetype
+            
             case "ini":
                 try{
                     System.out.println(conf_path);
                     Ini ini = new Ini(new File(conf_path));
 
+                    // drawing engine
                     drawingEngine = ini.get("drawingSettings", "drawingEngine", String.class);
                     if (drawingEngine.equalsIgnoreCase("awt")) {
                         System.out.printf("Created drawingEngine: %s \n", drawingEngine);
                         this.drawing = new DrawingAWT(); 
                     }
 
+                    // get shapes from ini
                     String shapesString = ini.get("shapeArray", "shapes");
                     String[] shapesStringArray = shapesString.split(", ");
                     for(int i=0; i < shapesStringArray.length; i++){
-                        String shape = "shape" + (i+1);
+                        String shape_name = "shape" + (i+1);
                         
-                        String type = ini.get("shapes", shape + ".type");
+                        String type = ini.get("shapes", shape_name + ".type");
                         System.out.println(type);
+
+                        // TODO get other field based on its type and create shape
+
+                        //
+
+
+                        // Call this function when you get "MyShape shape" 
+                        // SwingUtilities.invokeLater(() -> {
+                        //     drawing.paintShape(shape);
+                        // });
                     }
                     
 
@@ -156,6 +158,8 @@ public class DrawingFactory {
                 }
                 break;
             //
+
+            // TODO others filetype
             
             default:
                 throw new FileNotFoundException("Unsupported file filetype: " + filetype);
