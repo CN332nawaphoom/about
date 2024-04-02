@@ -1,3 +1,4 @@
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
@@ -14,6 +15,12 @@ import Shape.MyCircle;
 import Shape.MyRectangle;
 import Shape.MyTriangle;
 import Shape.MyShape;
+
+import org.ini4j.Ini;
+import org.ini4j.IniPreferences;
+import org.ini4j.InvalidFileFormatException;
+import org.ini4j.Profile;
+import org.ini4j.Profile.Section;
 
 public class DrawingFactory {
     private Drawing drawing;
@@ -70,6 +77,11 @@ public class DrawingFactory {
         }
         return myshape;
     }
+
+    private MyShape createMyShape_from_ini(){
+        // TODO
+        return null;
+    }
     
 
     public void read_conf() throws FileNotFoundException {
@@ -114,6 +126,35 @@ public class DrawingFactory {
 
 
             // TODO others filetype
+            case "ini":
+                try{
+                    System.out.println(conf_path);
+                    Ini ini = new Ini(new File(conf_path));
+
+                    drawingEngine = ini.get("drawingSettings", "drawingEngine", String.class);
+                    if (drawingEngine.equalsIgnoreCase("awt")) {
+                        System.out.printf("Created drawingEngine: %s \n", drawingEngine);
+                        this.drawing = new DrawingAWT(); 
+                    }
+
+                    String shapesString = ini.get("shapeArray", "shapes");
+                    String[] shapesStringArray = shapesString.split(", ");
+                    for(int i=0; i < shapesStringArray.length; i++){
+                        String shape = "shape" + (i+1);
+                        
+                        String type = ini.get("shapes", shape + ".type");
+                        System.out.println(type);
+                    }
+                    
+
+                }
+
+                catch(InvalidFileFormatException err){
+                    System.out.println(err);
+                }catch(IOException err){
+                    System.out.println(err);
+                }
+                break;
             //
             
             default:
