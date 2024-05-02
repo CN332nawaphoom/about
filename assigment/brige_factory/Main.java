@@ -4,7 +4,7 @@ import java.io.FileNotFoundException;
 public class Main {
     public static void main(String[] args) {
         String dir = System.getProperty("user.dir");
-        String configName = "configs.json";
+        String configName = "configs.ini";
         String filepath = dir + "\\configs\\" + configName;
         
         // Create directory for images if it does not exist
