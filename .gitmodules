@@ -1,3 +1,6 @@
 [submodule "assigment/obsserverPatternImplement"]
 	path = assigment/observerPatternImplement
 	url = https://github.com/6410615121/observerPatternImplement
+[submodule "assigment/AlarmClock"]
+	path = assigment/AlarmClock
+	url = https://github.com/6410615121/AlarmClock
